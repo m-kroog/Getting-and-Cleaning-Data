@@ -1,4 +1,4 @@
-Lines 1 and 2 load the necessary packages to run the analysis script
+Line 1 loads the necessary packages to run the analysis script
 
 Lines 4-10 import all the data and assigns it to different names
 
@@ -18,12 +18,14 @@ Line 32 combines by column three types of data that we are working with
 
 Lines 34 to 39 returns all the rows that match the activity types
 
-Lines 41 to 46 group the data by the subjectId, takes the mean of that column and then takes the mean of each row
+Lines 41 to 46 group the data by the subjectId, takes the mean of that column
 
-Lines 48 to 49 creates a data frame of all six activity types and names each variable
+Lines 48 to 49 create a sequence from 1 to 30, combines it by row into the tidy data table
 
-Line 51 makes the data tidy by combining all the activity types into one column and all the means into another column
+Lines 51 to 53 creates a repetition of each activity type 30 times and combines it by row into a data frame
 
-Lines 53 to 55 create a sequence from 1 to 30, combines it by column into the tidy data table and names each variable
+Line 55 names the activity type column
 
-Line 57 exports the tidy data table into a txt file
+Line 57 combines by column the subjects, activity type and tidy data frames.
+
+Line 59 exports the tidy data table into a txt file

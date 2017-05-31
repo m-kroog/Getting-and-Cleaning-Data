@@ -1,5 +1,4 @@
 library(dplyr)
-library(tidyr)
 
 x_test <- read.table("~/UCI HAR Dataset/test/X_test.txt")
 x_train <- read.table("~/UCI HAR Dataset/train/X_train.txt")
@@ -38,18 +37,22 @@ sitting <- filter(xy_test_train, activityType == "SITTING") %>% select(-activity
 standing <- filter(xy_test_train, activityType == "STANDING") %>% select(-activityType)
 laying <- filter(xy_test_train, activityType == "LAYING") %>% select(-activityType)
 
-walkingMeans <- walking %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId) %>% rowMeans
-walkingUpMeans <- walking_up %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId) %>% rowMeans
-walkingDownMeans <- walking_down %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId) %>% rowMeans
-sittingMeans <- sitting %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId) %>% rowMeans
-standingMeans <- standing %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId) %>% rowMeans
-layingMeans <- laying %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId) %>% rowMeans
-
-tidydf <- data.frame(walkingMeans, walkingUpMeans, walkingDownMeans, sittingMeans, standingMeans, layingMeans)
-colnames(tidydf) <- c("WALKING", "WALKINGUP", "WALKINGDOWN", "SITTING", "STANDING", "LAYING")
-
-tidydf_gathered <- gather(tidydf)
+walkingMeans <- walking %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId)
+walkingUpMeans <- walking_up %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId)
+walkingDownMeans <- walking_down %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId)
+sittingMeans <- sitting %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId)
+standingMeans <- standing %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId)
+layingMeans <- laying %>% group_by(subjectId) %>% summarize_each(funs(mean)) %>% select(-subjectId)
 
 subject_id_rep <- rep(seq.int(1:30), times = 6)
-tidydf_all <- cbind(subject_id_rep, tidydf_gathered)
-colnames(tidydf_all) <- c("subjectId", "activityType", "mean")
+tidydf <- rbind(walkingMeans, walkingUpMeans, walkingDownMeans, sittingMeans, standingMeans, layingMeans)
+
+activityType_rep <- as.data.frame(c(rep("WALKING", times = 30), rep("WALKING_UPSTAIRS", times = 30),
+                      rep("WALKING_DOWNSTAIRS", times = 30), rep("SITING", times = 30),
+                      rep("STANDING", times = 30), rep("LAYING", times = 30)))
+
+colnames(activityType_rep) <- "activityType"
+
+tidydf <- cbind(subject_id_rep, activityType_rep, tidydf)
+
+write.table(tidydf, "C:/Users/miguelito/Documents/week4assign.txt", row.names = FALSE)
